@@ -6,6 +6,6 @@ Este repositório contém o projeto de construção de uma réplica da calculado
 
 - Plataforma Java: Standard Edition
 - Versão mínima: 11
-- Documentação: (All Classes)[https://docs.oracle.com/en/java/javase/11/docs/api/allclasses.html]
+- Documentação: [All Classes](https://docs.oracle.com/en/java/javase/11/docs/api/allclasses.html)
 
 
