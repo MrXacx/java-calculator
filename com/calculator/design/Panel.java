@@ -26,7 +26,7 @@ import com.calculator.service.Mathematics;
  * @since 1.0
  */
 public class Panel extends JPanel {
-	    
+	
     private JButton[] basicMath, specialMath, numbers, systemFunc;
 
     private JLabel content, standbye;
