@@ -1,20 +1,30 @@
 package com.calculator.design;
-
+// Início de classes de componentes do frame
 import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+// Fim de classes de componentes do frame
 
+// Início de classes de layout
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Group;
+// Fim de classes de layout
 
+// Início de classes de eventos
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+// Fim de classes de eventos
 
+// Início de classes de vetores
 import java.util.Arrays;
 import java.util.List;
+// Fim de classes de vetores
 
+// Início de classes internas
+import com.calculator.Core;
 import com.calculator.service.Mathematics;
+// Fim de classes internas
 
 /**
  *
@@ -22,16 +32,20 @@ import com.calculator.service.Mathematics;
  * @author Italo Cerqueira
  * @author Maria França
  * @author Pedro Santos
- * @version 2.0
+ * @version 3.0
  * @since 1.0
  */
 public class Panel extends JPanel {
-	
-    private JButton[] basicMath, specialMath, numbers, systemFunc;
+	// Botões da calculadora
+    private JButton[] basicMath, specialMath, numbers, systemFunc; // operadores matemáticos básicos, operadores matemáticos especias, algarismos, botões do sistema
 
-    private JLabel content, standbye;
+    // Labels de conteúdo
+    private JLabel content, standbye; // número atual, número em standbye para operação
+
+    // Painel de exibição
     private JPanel screen;
 
+    // Manipulador da classe de cálculos
 	private Mathematics math;
 	
     public Panel() {
@@ -40,7 +54,7 @@ public class Panel extends JPanel {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        math = new Mathematics();
+        //math = new Mathematics();
         // Inicia configuração da label de cálculos
         content = new JLabel();
         content.setText(" ");
@@ -100,7 +114,7 @@ public class Panel extends JPanel {
     private JButton[] initSystemButtons(){
         /**
          * @return Array de botões com funções não-numéricas configuradas
-         * @version 1.0
+         * @version 1.1
          * @since 2.0
          */
 
@@ -109,10 +123,10 @@ public class Panel extends JPanel {
     	 
         // Inicia configuração do botão "C"
         buttons[0].setText("C");
-        buttons[1].addActionListener(new ActionListener() {
+        buttons[0].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-               math.close();
                content.setText(" "); // Limpa todo o valor da atual entrada de dados
+               standbye.setText(" ");
             }
         }); 
         // Finaliza configuração do botão "C"
@@ -121,7 +135,8 @@ public class Panel extends JPanel {
         buttons[1].setText("CE");
         buttons[1].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-               content.setText(" "); // Limpa todo o valor da atual entrada de dados  
+               content.setText(" "); // Limpa todo o valor da atual entrada de dados 
+
             }
         }); 
         // Finaliza configuração do botão "CE"
@@ -148,7 +163,7 @@ public class Panel extends JPanel {
     private JButton[] initBasicMathSignButtons(){
         /**
          * @return Array de botões com operações matemáticas básicas configuradas
-         * @version 1.0
+         * @version 2.0
          * @since 2.0
          */
 
@@ -170,18 +185,73 @@ public class Panel extends JPanel {
         // Inicia configuração do botão de adição
         basicMathSign[3].setText("+");
         
-        /**
-        * TODO: Método geral para operações básicas
-        * @see Mathematics
-        */
+        // Inicia configuração do listener geral de botões de operações básicas
+        for(int index = 0; index < basicMathSign.length; index++){
+            // Garante que todos os botões serão incluídos
 
-        return basicMathSign;
+            final String op = basicMathSign[index].getText(); // Obtém operador como string final
+
+            // Adiciona listener
+            basicMathSign[index].addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    String nContent = content.getText(); // Obtém cópia do texto de content
+                    String nStandbye = standbye.getText(); // Obtém cópia do texto de standbye
+
+                    if(nContent.isBlank()){
+                        // Executa caso não haja valores em content
+
+                        if(math instanceof Mathematics){
+                            // Executa se math já estiver instanciada
+                            math.setOperatorID(op); // Altera operador a ser utilizado
+                            standbye.setText(nStandbye.substring(0, nStandbye.length()-1) + op); // Altera operador exibido
+                        }
+
+                        return; // Impede que função continue a ser executada
+                    }
+
+                    /*else if(nStandbye.isBlank()){
+                        // Executa standbye estiver vazio, ou seja, o primeiro valor da operação está sendo inserido
+
+                       
+                    
+                    }*/
+                    else if(!nStandbye.isBlank()){
+                        // Executa standbye não estiver vazio, ou seja, esse é o segundo valor da operação
+                        // Operação sequenciais terão o resultado do primeiro cálculo como primeiro valor da operação seguinte
+
+                        math.setPortion(Double.valueOf(nContent), 1); // Passa valor da segunda posição
+
+                        try {
+                            nContent = (Double.valueOf(math.getResult()).toString()); //  Armazena resultado do cálculo anterior
+                        } catch (Exception e) {
+                            // Executa em caso de exceção emitida
+
+                            content.setText(" "); // Limpa conteúdo da tela
+                            Core.error(e); // Chama método de encerramento de emergência
+
+                            // Código será encerrado aqui
+                        }
+
+                    }
+                    
+                    math = new Mathematics(); // Intancia classe de cálculos
+                    math.setPortion(Double.valueOf(nContent), 0); // Pass primeira parcela da operação
+                    math.setOperatorID(op); // Define operador
+                    
+                    standbye.setText(" " +nContent+" "+op); // Informa valor passado e operação escolhida
+                    content.setText(" ");
+                }
+            });
+        }
+        // Finaliza configuração do listener geral de botões de operações básicas
+
+        return basicMathSign; // Retorna botões configurados
     }
 
     private JButton[] initSpecialMathSignButtons(){
         /**
          * @return Array de botões com operações matemáticas complementares configuradas
-         * @version 1.0
+         * @version 1.1
          * @since 2.0
          */
 
@@ -212,34 +282,46 @@ public class Panel extends JPanel {
         SpecialMathSign[5].setText("=");
         SpecialMathSign[5].addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(math.isset(0)){
-                	math.setPortion(Double.valueOf(content.getText()), 1);
-                	content.setText(Double.valueOf(math.getResult()).toString());
-                	standbye.setText(" ");
-                	math.close();
+                if(!(standbye.getText().isBlank() || content.getText().isBlank())){
+                    // Executa somente quanto standbye e content estão preenchidos
+
+                	math.setPortion(Double.valueOf(content.getText()), 1); // Passa segunda parcela do cálculos
+
+                    try {
+                        content.setText(Double.valueOf(math.getResult()).toString()); //  Armazena resultado do cálculo anterior
+                    } catch (Exception e) {
+                        // Executa em caso de exceção emitida
+
+                        content.setText(" "); // Limpa conteúdo da tela
+                        Core.error(e); // Chama método de encerramento de emergência
+
+                        // Código será encerrado aqui
+                    }
+
+                	standbye.setText(" "); // Limpa standbye
                 }
             }
         });
         // Finaliza configuração do botão de igualdade
 
         // Inicia configuração do botão de vírgula
-        SpecialMathSign[6].setText(",");
+        SpecialMathSign[6].setText(".");
         SpecialMathSign[6].addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(!content.getText().contains(",")) // Executa caso não haja "," na string
-                    content.setText(content.getText() + ","); // Adiciona "," ao final da string
+                if(!content.getText().contains(".")) // Executa caso não haja "," na string
+                    content.setText(content.getText() + "."); // Adiciona "," ao final da string
             }
         });
         // Finaliza configuração do botão de vírgula
 
-        return SpecialMathSign;
+        return SpecialMathSign; // Retorna botões configurados
     }
     
     private JButton[] initNumericButtons(JButton[] numericButtons){
     	/**
          * @param Array genérico de JButton
          * @return Array de botões numéricos com índice inicial 0
-         * @version 1.0
+         * @version 1.1
          * @since 1.0
          */
         
@@ -262,20 +344,20 @@ public class Panel extends JPanel {
             // Listener padrão
             numericButtons[index].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    content.setText(content.getText() + i); // Insere número ao fim da string
+                    String nContent = content.getText();
+
+                    content.setText( (nContent.charAt(0) == ' ' ? nContent : " ") + i); // Insere número ao fim da string
                 }
             });
         }
 
-        return numericButtons;
+        return numericButtons; // Retorna botões configurados
     }
-
 
     /**
      *  INÍCIO DE MÉTODOS PARA CONFIGURAÇÃO DE LAYOUT
      *      INÍCIO DE MÉTODOS DE LAYOUT DO VISOR DE CÁLCULOS
      */
-
 
     private void setHorizontalScreenLayout(GroupLayout screenLayout){
     	/** 
@@ -285,8 +367,10 @@ public class Panel extends JPanel {
     	*/
     	
         screenLayout.setHorizontalGroup(
-            screenLayout.createParallelGroup(GroupLayout.Alignment.LEADING) // Cria grupo de componentes paralelos
+            //layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            screenLayout.createSequentialGroup() // Cria grupo de componentes paralelos
         	.addComponent(standbye, 110, 110, 110) // adiciona label de standbye com comprimento 110
+            .addGap(10, 30, 50)
         	.addComponent(content, 110, 110, 110) // adiciona label de conteúdo com comprimento 110
         );
     }
@@ -296,7 +380,7 @@ public class Panel extends JPanel {
             screenLayout.createParallelGroup(GroupLayout.Alignment.LEADING) // Cria grupo de componentes paralelos
 			.addGroup(screenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             	.addComponent(standbye, 40, 40, 40) // adiciona label de standbye com comprimento 40
-            	.addComponent(content, 40, 40, 40)) // adiciona label de conteúdo com comprimento 40
+                .addComponent(content, 40, 40, 40)) // adiciona label de conteúdo com comprimento 40
         );
     }
         // FIM DE MÉTODOS DE LAYOUT DO VISOR DE CÁLCULOS

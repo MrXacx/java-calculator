@@ -1,33 +1,69 @@
 package com.calculator.service;
 
+
+/**
+ * @author Ariel Santos
+ * @author Pedro Santos
+ * @version 1.0
+ * @since 3.0
+ */
+
 public class Mathematics{
-	private String[] portion;
-	private String operatorID;
+
+	private Double[] portion; // Números do cálculo
+	private String operatorID; // Operador a ser utilizado
 	
 	public Mathematics(){
-		this.portion = new String[2];
+		this.portion = new Double[2]; // Instancia array de duas posições
 	}
 	
-	public void setPortion(double number, int id){
-		this.portion[id] = Double.valueOf(number).toString();
+	public void setPortion(Double number, int id){
+		/**
+		 * @param número a ser calculado
+		 * @param posição do número do cálculo
+		 * @since 1.0
+		 * @version 1.0
+		 */
+		this.portion[id] = number;
 	}
 	
-	public boolean isset(int id){
-		return portion[id].isBlank();
-	}
 	
 	public void setOperatorID(String operatorID){
+		/**
+		 * @param operador do cálculo
+		 * @since 1.0
+		 * @version 1.0
+		 */
 		this.operatorID = operatorID;
 	}
 	
-	public double getResult(){
-		// TODO: Código que retorna determinado cálculo de acordo com operatorID, USAR SWITCH-CASE
-		return 0.0;
-	}
-	
-	public void close(){
-		this.portion[0] = "";
-		this.portion[1] = "";;
-		this.operatorID = "";;
+	public double getResult() throws Exception{
+		/**
+		 * @return Resultado da operação definida
+		 * @since 1.0
+		 * @version 1.0 
+		 * @throws Exception
+		 */
+
+		switch (this.operatorID) {
+            case "+":
+				// Caso soma tenha sido selecionada
+                return portion[0] + portion[1];
+
+            case "-":
+				// Caso subtração tenha sido selecionada
+				return portion[0] - portion[1];
+
+            case "x":
+				// Caso multiplicação tenha sido selecionada
+				return portion[0] * portion[1];
+
+            case "÷":
+				// Caso divisão tenha sido selecionada
+				return portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
+			default:
+				// Caso valor inesperado esteja em this.operatorID
+				throw new Exception("Erro ao obter resultado matemático em Mathematics::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
+        }
 	}
 }
