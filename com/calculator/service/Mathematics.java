@@ -29,41 +29,56 @@ public class Mathematics{
 	
 	
 	public void setOperatorID(String operatorID){
-		/**
-		 * @param operador do cálculo
-		 * @since 1.0
-		 * @version 1.0
-		 */
-		this.operatorID = operatorID;
+            /**
+             * @param operador do cálculo
+             * @since 1.0
+             * @version 1.0
+             */
+            this.operatorID = operatorID;
 	}
 	
 	public double getResult() throws Exception{
-		/**
-		 * @return Resultado da operação definida
-		 * @since 1.0
-		 * @version 1.0 
-		 * @throws Exception
-		 */
+            /**
+             * @return Resultado da operação definida
+             * @since 1.0
+             * @version 1.0 
+             * @throws Exception
+             */
 
-		switch (this.operatorID) {
-            case "+":
-				// Caso soma tenha sido selecionada
-                return portion[0] + portion[1];
+            switch (this.operatorID) {
+                case "+":
+                                    // Caso soma tenha sido selecionada
+                    return portion[0] + portion[1];
 
-            case "-":
-				// Caso subtração tenha sido selecionada
-				return portion[0] - portion[1];
+                case "-":
+                        // Caso subtração tenha sido selecionada
+                        return portion[0] - portion[1];
 
-            case "x":
-				// Caso multiplicação tenha sido selecionada
-				return portion[0] * portion[1];
+                case "x":
+                        // Caso multiplicação tenha sido selecionada
+                        return portion[0] * portion[1];
 
-            case "÷":
-				// Caso divisão tenha sido selecionada
-				return portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
-			default:
-				// Caso valor inesperado esteja em this.operatorID
-				throw new Exception("Erro ao obter resultado matemático em Mathematics::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
-        }
+                case "÷":
+                        // Caso divisão tenha sido selecionada
+                        return portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
+                case "%":
+                        // Caso porcentagem tenha sido selecionada
+                         return portion[0]*portion[1]/100;
+                                
+                case "√":
+                        // Caso radiciação tenha sido selecionada
+                        return Math.sqrt(portion[0]);
+                                
+                case "x²":
+                        //Caso potenciação tenha sido selecionada
+                        return (portion[0]*portion[0]);
+                case "1/x":
+                        //Caso 1/x tenha sido selecionada
+                        return 1/portion[0];        
+                   
+                default:
+                        // Caso valor inesperado esteja em this.operatorID
+                        throw new Exception("Erro ao obter resultado matemático em Mathematics::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
+            }
 	}
 }
