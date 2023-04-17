@@ -6,6 +6,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 // Fim de classes de componentes do frame
 
+// Início de classes de estilização
+import java.awt.Color;
+import java.awt.Font;
+// Fim de classes de estilização
+
 // Início de classes de layout
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Group;
@@ -66,10 +71,10 @@ public class Panel extends JPanel {
         // Finaliza configuração da label de standbye
 
         // Inicia configuração de botões
-        numbers = this.initNumericButtons(new JButton[10]); // Cria botões numéricos
-        systemFunc = this.initSystemButtons(); // Cria botões com funções de sistema
-        basicMath = this.initBasicMathSignButtons(); // Cria operadores matemáricos
-        specialMath = this.initSpecialMathSignButtons(); // Cria demais sinais matemáticos
+        numbers = styleButtonArray(this.initNumericButtons(new JButton[10])); // Cria botões numéricos
+        systemFunc = styleButtonArray(this.initSystemButtons()); // Cria botões com funções de sistema
+        basicMath = styleButtonArray(this.initBasicMathSignButtons()); // Cria operadores matemáricos
+        specialMath = styleButtonArray(this.initSpecialMathSignButtons()); // Cria demais sinais matemáticos
 		// Finaliza configuração de botões
 		
         // Inicia configuração do painel de cálculos
@@ -352,6 +357,23 @@ public class Panel extends JPanel {
         }
 
         return numericButtons; // Retorna botões configurados
+    }
+
+    private JButton[] styleButtonArray(JButton[] buttons){
+        /**
+         * @param array de botões a serem estilizados
+         * @return array de botões após estilização
+         * @version 1.0
+         * @since 3.0
+         */
+        
+        // Percorre todo o array
+        for(int index = 0; index < buttons.length; index++){
+            buttons[index].setBackground(Color.WHITE); // Define background branco
+            buttons[index].setFocusPainted(false); // Desativa foco
+            buttons[index].setFont(new Font("Arial", Font.PLAIN, 14)); // Define fonte
+        }
+        return buttons; // Retorna botões estilizados
     }
 
     /**
