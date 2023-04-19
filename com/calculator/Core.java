@@ -1,11 +1,13 @@
 package com.calculator;
 
+// Início de classes de interface gráfica
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+// Início de classes de interface gráfica
 
+// Início de classes internas
 import com.calculator.design.Panel;
-
-
+// Início de classes internas
 
 /**
  *
@@ -16,16 +18,17 @@ import com.calculator.design.Panel;
  */
 public class Core {
 
-    // Frame da calculadora
-    private static JFrame frame;
+    private static JFrame frame; // Frame da calculadora
 
     public static void main(String[] args) {
+    
         frame = new JFrame("Calculadora"); // Instancia e define título do frame
         frame.add(new Panel()); // Adiciona painel da calculadore
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Determina que código deve ser encerrado no fechamento do frame
         frame.setSize(240,360); // Define dimensões
         frame.setLocationRelativeTo(null); // Centraliza frame na tela
         frame.setVisible(true); // Torna frame visível
+        
     }
     public static void error(Exception e){
         /**
@@ -36,6 +39,7 @@ public class Core {
         JOptionPane.showMessageDialog(frame,  "Erro interno. Consulte o terminal para saber mais.", "Error", 1); // Informa erro ao usuário
         frame.setVisible(false); // Fecha frame
         System.exit(1); // Encerra código
+        
     }
     
 }

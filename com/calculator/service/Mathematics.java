@@ -3,6 +3,7 @@ package com.calculator.service;
 
 /**
  * @author Ariel Santos
+ * @author Maria França
  * @author Pedro Santos
  * @version 1.0
  * @since 3.0
@@ -38,47 +39,58 @@ public class Mathematics{
 	}
 	
 	public double getResult() throws Exception{
-            /**
-             * @return Resultado da operação definida
-             * @since 1.0
-             * @version 1.0 
-             * @throws Exception
-             */
+		    /**
+		     * @return Resultado da operação definida
+		     * @since 1.0
+		     * @version 1.0 
+		     * @throws Exception
+		     */
 
-            switch (this.operatorID) {
-                case "+":
-                                    // Caso soma tenha sido selecionada
-                    return portion[0] + portion[1];
+		    switch (this.operatorID) {
+		        case "+":
+		            // Caso soma tenha sido selecionada
+		            return portion[0] + portion[1];
 
-                case "-":
-                        // Caso subtração tenha sido selecionada
-                        return portion[0] - portion[1];
+		        case "-":
+		            // Caso subtração tenha sido selecionada
+		            return portion[0] - portion[1];
 
-                case "x":
-                        // Caso multiplicação tenha sido selecionada
-                        return portion[0] * portion[1];
+		        case "x":
+		            // Caso multiplicação tenha sido selecionada
+		            return portion[0] * portion[1];
 
-                case "÷":
-                        // Caso divisão tenha sido selecionada
-                        return portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
-                case "%":
-                        // Caso porcentagem tenha sido selecionada
-                         return portion[0]*portion[1]/100;
-                                
-                case "√":
-                        // Caso radiciação tenha sido selecionada
-                        return Math.sqrt(portion[0]);
-                                
-                case "x²":
-                        //Caso potenciação tenha sido selecionada
-                        return (portion[0]*portion[0]);
-                case "1/x":
-                        //Caso 1/x tenha sido selecionada
-                        return 1/portion[0];        
-                   
-                default:
-                        // Caso valor inesperado esteja em this.operatorID
-                        throw new Exception("Erro ao obter resultado matemático em Mathematics::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
-            }
+		        case "÷":
+		            // Caso divisão tenha sido selecionada
+		            return portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
+
+		        default:
+		            // Caso valor inesperado esteja em this.operatorID
+		            throw new Exception("Erro ao obter resultado matemático em Mathematics::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
+		    }
+	}
+	
+	public double getSubresult(double value, String efemeryOperator) throws Exception{
+		switch (efemeryOperator) {
+            case "%":
+                // Caso porcentagem tenha sido selecionada
+                 return portion[0]*value/100;
+                            
+            case "√":
+                // Caso radiciação tenha sido selecionada
+                return Math.sqrt(value);
+ 
+            case "x²":
+                //Caso potenciação tenha sido selecionada
+                return (value * value);
+            case "1/x":
+                //Caso o inverso do número tenha sido selecionado
+                return 1/value;        
+            case "±":
+                //Caso a alteração de sinal tenha sido selecionada
+                return value * (-1);  
+            default:
+                // Caso valor inesperado esteja em this.operatorID
+                throw new Exception("Erro ao obter resultado matemático em Mathematics::getSubresult(). Operador utilizado: " + efemeryOperator); // Emite exceção
+        }
 	}
 }

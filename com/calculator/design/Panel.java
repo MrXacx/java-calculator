@@ -41,17 +41,11 @@ import com.calculator.service.Mathematics;
  * @since 1.0
  */
 public class Panel extends JPanel {
-	// Botões da calculadora
-    private JButton[] basicMath, specialMath, numbers, systemFunc; // operadores matemáticos básicos, operadores matemáticos especias, algarismos, botões do sistema
-
-    // Labels de conteúdo
-    private JLabel content, standbye; // número atual, número em standbye para operação
-
-    // Painel de exibição
-    private JPanel screen;
-
-    // Manipulador da classe de cálculos
-	private Mathematics math;
+	
+    private JButton[] basicMath, specialMath, numbers, systemFunc; // Botões da calculadora (operadores matemáticos básicos, operadores matemáticos especias, algarismos, botões do sistema)
+    private JLabel content, standBy; // Labels de conteúdo (número atual, número em standBy para operação)
+    private JPanel screen; // Painel de exibição
+	private Mathematics math; // Manipulador da classe de cálculos
 	
     public Panel() {
         initComponents();
@@ -59,19 +53,12 @@ public class Panel extends JPanel {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        // Inicia configuração da label de cálculos
-        content = new JLabel(" ");
-        //content.setText(" ");
-        // Finaliza configuração da label de cálculos
         
-        // Inicia configuração da label de standbye
-        standbye = new JLabel(" ");
-        //standbye.setText(" ");
-        // Finaliza configuração da label de standbye
+        content = new JLabel(" "); // Inicia label de cálculos
+        standBy = new JLabel(" "); // Cria standBy de cálculos
 
         // Inicia configuração de botões
         numbers = styleButtonArray(this.initNumericButtons(new JButton[10])); // Cria botões numéricos
-        
         systemFunc = styleButtonArray(this.initSystemButtons()); // Cria botões com funções de sistema
         basicMath = styleButtonArray(this.initBasicMathSignButtons()); // Cria operadores matemáricos
         specialMath = styleButtonArray(this.initSpecialMathSignButtons()); // Cria demais sinais matemáticos
@@ -105,8 +92,7 @@ public class Panel extends JPanel {
          * @since 2.0
          */
 
-        // Índice para percorrer array
-        int index = 0;
+        int index = 0; // Índice para percorrer array
     	
         // Percorre todo o array
     	while (index < buttons.length){
@@ -123,15 +109,14 @@ public class Panel extends JPanel {
          * @since 2.0
          */
 
-    	// Cria array genérico de JButton com 3 espaços
-        JButton[] buttons = this.createGenericButtons(new JButton[3]);
+        JButton[] buttons = this.createGenericButtons(new JButton[3]); // Cria array genérico de JButton com 3 espaços
     	 
         // Inicia configuração do botão "C"
         buttons[0].setText("C");
         buttons[0].addActionListener(evt -> {
             
                content.setText(" "); // Limpa todo o valor da atual entrada de dados
-               standbye.setText(" ");
+               standBy.setText(" ");
             
         }); 
         // Finaliza configuração do botão "C"
@@ -149,14 +134,14 @@ public class Panel extends JPanel {
         buttons[2].setText("Del");
         buttons[2].addActionListener(evt -> {
             
-               String text = content.getText();   
-               text = (text.charAt(0) == ' ' ? "" : " ") + text;
+               String nContent = content.getText();   
+               nContent = (nContent.charAt(0) == ' ' ? "" : " ") + nContent;
                
-               int strlen = text.length();
+               int strlen = nContent.length();
   
                if(strlen > 1){ // Evita que espaçamento de 1 caracter seja deletado
 				   content.setText(
-					  (new StringBuilder(text)).deleteCharAt(--strlen).toString() // Retorna a string sem o último caractere
+					  (new StringBuilder(nContent)).deleteCharAt(--strlen).toString() // Retorna a string sem o último caractere
 				   );
 			   }
             
@@ -173,23 +158,12 @@ public class Panel extends JPanel {
          * @since 2.0
          */
 
-        // Cria array genérico de JButton com 4 espaços
-        JButton[] basicMathSign = this.createGenericButtons(new JButton[4]);
-
-        // Inicia configuração do botão de divisão
-        basicMathSign[0].setText("÷");
-        // Finaliza configuração do botão de divisão
-
-        // Inicia configuração do botão de multiplicação
-        basicMathSign[1].setText("x");
-        // Finaliza configuração do botão de multiplicação
-
-        // Inicia configuração do botão de subtração
-        basicMathSign[2].setText("-");
-        // Finaliza configuração do botão de subtração
-
-        // Inicia configuração do botão de adição
-        basicMathSign[3].setText("+");
+        JButton[] basicMathSign = this.createGenericButtons(new JButton[4]); // Cria array genérico de JButton com 4 espaços
+        
+        basicMathSign[0].setText("÷"); // Define texeto do botão de divisão
+        basicMathSign[1].setText("x"); // Define texeto do botão de multiplicação
+        basicMathSign[2].setText("-"); // Define texeto do botão de subtração
+        basicMathSign[3].setText("+"); // CDefine texeto o botão de adição
         
         // Inicia configuração do listener geral de botões de operações básicas
         for(int index = 0; index < basicMathSign.length; index++){
@@ -201,7 +175,7 @@ public class Panel extends JPanel {
             basicMathSign[index].addActionListener(evt -> {
                 
                     String nContent = content.getText(); // Obtém cópia do texto de content
-                    String nStandbye = standbye.getText(); // Obtém cópia do texto de standbye
+                    String nstandBy = standBy.getText(); // Obtém cópia do texto de standBy
 
                     if(nContent.isBlank()){
                         // Executa caso não haja valores em content
@@ -209,14 +183,14 @@ public class Panel extends JPanel {
                         if(math instanceof Mathematics){
                             // Executa se math já estiver instanciada
                             math.setOperatorID(op); // Altera operador a ser utilizado
-                            standbye.setText(nStandbye.substring(0, nStandbye.length()-1) + op); // Altera operador exibido
+                            standBy.setText(nstandBy.substring(0, nstandBy.length()-1) + op); // Altera operador exibido
                         }
 
                         return; // Impede que função continue a ser executada
                     }
 
-                    else if(!nStandbye.isBlank()){
-                        // Executa standbye não estiver vazio, ou seja, esse é o segundo valor da operação
+                    else if(!nstandBy.isBlank()){
+                        // Executa standBy não estiver vazio, ou seja, esse é o segundo valor da operação
                         // Operação sequenciais terão o resultado do primeiro cálculo como primeiro valor da operação seguinte
 
                         math.setPortion(Double.valueOf(nContent), 1); // Passa valor da segunda posição
@@ -225,10 +199,7 @@ public class Panel extends JPanel {
                             nContent = (Double.valueOf(math.getResult()).toString()); //  Armazena resultado do cálculo anterior
                         } catch (Exception e) {
                             // Executa em caso de exceção emitida
-
-                            content.setText(" "); // Limpa conteúdo da tela
                             Core.error(e); // Chama método de encerramento de emergência
-
                             // Código será encerrado aqui
                         }
 
@@ -238,7 +209,7 @@ public class Panel extends JPanel {
                     math.setPortion(Double.valueOf(nContent), 0); // Pass primeira parcela da operação
                     math.setOperatorID(op); // Define operador
                     
-                    standbye.setText(" " +nContent+" "+op); // Informa valor passado e operação escolhida
+                    standBy.setText(" " +nContent+" "+op); // Informa valor passado e operação escolhida
                     content.setText(" ");
                 
             });
@@ -256,34 +227,35 @@ public class Panel extends JPanel {
          */
 
         // Cria array genérico de JButton com 7 espaços
-    	JButton[] SpecialMathSign = this.createGenericButtons(new JButton[7]);
+    	JButton[] specialMathSign = this.createGenericButtons(new JButton[7]);
     	
         // Inicia configuração do botão de raíz quadrada
-        SpecialMathSign[0].setText("√");
-        SpecialMathSign[0].addActionListener(evt -> {
-            
-                math = new Mathematics();
-                math.setPortion(Double.valueOf(content.getText()), 0);
-                math.setOperatorID("√");
+        specialMathSign[0].setText("√");
+        specialMathSign[0].addActionListener(evt -> {
+        	String nContent = content.getText();
+            if(!nContent.isBlank()){
+            	if(!(math instanceof Mathematics)){
+	                math = new Mathematics();
+                }
+                
                 try{
-                    content.setText(Double.valueOf(math.getResult()).toString());
+                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "√")).toString());
                 } catch(Exception e){
                     Core.error(e);
                 }
-            
+            }
         });
         // Finaliza configuração do botão de raíz quadrada
 
         // Inicia configuração do botão de porcentagem
-        SpecialMathSign[1].setText("%");
-        SpecialMathSign[1].addActionListener(evt -> {
+        specialMathSign[1].setText("%");
+        specialMathSign[1].addActionListener(evt -> {
             
-
-                if(!standbye.getText().isBlank()) {
-                    math.setPortion(Double.valueOf(content.getText()), 1);
-                    math.setOperatorID("%");
+				
+                if(math instanceof Mathematics) {
+                   String nContent = content.getText();
                     try{
-                        content.setText(Double.valueOf(math.getResult()).toString());
+                        content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "%")).toString());
                     } catch(Exception e){
                         Core.error(e);
                     }
@@ -292,60 +264,67 @@ public class Panel extends JPanel {
         });
         // Finaliza configuração do botão de porcentagem
 
-        // Inicia configuração do botão de 
-        SpecialMathSign[2].setText("1/x");
-        SpecialMathSign[2].addActionListener(evt -> {
-            
-                math = new Mathematics();
-                math.setPortion(Double.valueOf(content.getText()), 0);
-                math.setOperatorID("1/x");
+        // Inicia configuração do botão de inverso
+        specialMathSign[2].setText("1/x");
+        specialMathSign[2].addActionListener(evt -> {
+            String nContent = content.getText();
+            if(!nContent.isBlank()){
+            	if(!(math instanceof Mathematics)){
+	                math = new Mathematics();
+                }
                 try{
-                    content.setText(Double.valueOf(math.getResult()).toString());
+                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "1/x")).toString());
                 } catch(Exception e){
                     Core.error(e);
                 }
-            
+            }
         });
-        // Finaliza configuração do botão de 
+        // Finaliza configuração do botão de inverso
 
-        // Inicia configuração do botão de potência quadrada
-        SpecialMathSign[3].setText("x²");
-        SpecialMathSign[3].addActionListener(evt -> {
+        // Inicia configuração do botão de potência com expoente 2
+        specialMathSign[3].setText("x²");
+        specialMathSign[3].addActionListener(evt -> {
             
-                math = new Mathematics();
-                math.setPortion(Double.valueOf(content.getText()), 0);
-                math.setOperatorID("x²");
+              String nContent = content.getText();
+            if(!nContent.isBlank()){
+            	if(!(math instanceof Mathematics)){
+	                math = new Mathematics();
+                }
+                
                 try{
-                    content.setText(Double.valueOf(math.getResult()).toString());
+                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "x²")).toString());
                 } catch(Exception e){
                     Core.error(e);
                 }
-            
+            }
         });
-        // Finaliza configuração do botão de potência quadrada
+        // Finaliza configuração do botão de potência com expoente 2
 
-        // Inicia configuração do botão de mais ou menos
-        SpecialMathSign[4].setText("±");
-        SpecialMathSign[4].addActionListener(evt -> {
-            
-                math = new Mathematics();
-                math.setPortion(Double.valueOf(content.getText()), 0);
-                math.setOperatorID("±");
+        // Inicia configuração do botão de oposto
+        specialMathSign[4].setText("±");
+        specialMathSign[4].addActionListener(evt -> {
+            String nContent = content.getText();
+            if(!nContent.isBlank()){
+            	if(!(math instanceof Mathematics)){
+	                math = new Mathematics();
+                }
+                
                 try{
-                    content.setText(Double.valueOf(math.getResult()).toString());
+                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "±")).toString());
                 } catch(Exception e){
                     Core.error(e);
                 }
+            }
             
         });
-        // Finaliza configuração do botão de mais ou menos
+        // Finaliza configuração do botão de oposto
 
         // Inicia configuração do botão de igualdade
-        SpecialMathSign[5].setText("=");
-        SpecialMathSign[5].addActionListener(evt -> {
+        specialMathSign[5].setText("=");
+        specialMathSign[5].addActionListener(evt -> {
             
-                if(!(standbye.getText().isBlank() || content.getText().isBlank())){
-                    // Executa somente quanto standbye e content estão preenchidos
+                if(!(standBy.getText().isBlank() || content.getText().isBlank())){
+                    // Executa somente quanto standBy e content estão preenchidos
 
                 	math.setPortion(Double.valueOf(content.getText()), 1); // Passa segunda parcela do cálculos
 
@@ -360,24 +339,26 @@ public class Panel extends JPanel {
                         Core.error(e); // Chama método de encerramento de emergência
                         // Código será encerrado aqui
                     }
-                        
-                	standbye.setText(" "); // Limpa standbye
+
+                	standBy.setText(" "); // Limpa standBy
+                	math = null;
                 }
             
         });
         // Finaliza configuração do botão de igualdade
 
         // Inicia configuração do botão de vírgula
-        SpecialMathSign[6].setText(".");
-        SpecialMathSign[6].addActionListener(evt -> {
-            
-                if(!content.getText().contains(".")) // Executa caso não haja "," na string
-                    content.setText(content.getText() + "."); // Adiciona "," ao final da string
+        specialMathSign[6].setText(".");
+        specialMathSign[6].addActionListener(evt -> {
+            	String nContent = content.getText();   
+                if(!nContent.contains(".")) // Executa caso não haja "," na string
+                	
+                    content.setText((nContent.charAt(0) == ' ' ? "" : " ") + nContent + "."); // Adiciona "," ao final da string
             
         });
         // Finaliza configuração do botão de vírgula
 
-        return SpecialMathSign; // Retorna botões configurados
+        return specialMathSign; // Retorna botões configurados
     }
     
     private JButton[] initNumericButtons(JButton[] numericButtons){
@@ -392,8 +373,7 @@ public class Panel extends JPanel {
         for (int index = 0; index < numericButtons.length; index++){
             final String i = Integer.toString(index);
 
-            // instancia espaço do array
-            numericButtons[index] = new JButton(i);
+            numericButtons[index] = new JButton(i); // instancia espaço do array
             
             // Listener padrão
             numericButtons[index].addActionListener(evt -> {
@@ -425,10 +405,6 @@ public class Panel extends JPanel {
         return buttons; // Retorna botões estilizados
     }
 
-    /**
-     *  INÍCIO DE MÉTODOS PARA CONFIGURAÇÃO DE LAYOUT
-     *      INÍCIO DE MÉTODOS DE LAYOUT DO VISOR DE CÁLCULOS
-     */
 
     private void setHorizontalScreenLayout(GroupLayout screenLayout){
     	/** 
@@ -438,9 +414,8 @@ public class Panel extends JPanel {
     	*/
     	
         screenLayout.setHorizontalGroup(
-            //layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             screenLayout.createSequentialGroup() // Cria grupo de componentes paralelos
-        	.addComponent(standbye, 110, 110, 110) // adiciona label de standbye com comprimento 110
+        	.addComponent(standBy, 110, 110, 110) // adiciona label de standBy com comprimento 110
             .addGap(20, 45, 45)
         	.addComponent(content, 110, 110, 110) // adiciona label de conteúdo com comprimento 110
         );
@@ -450,13 +425,11 @@ public class Panel extends JPanel {
         screenLayout.setVerticalGroup(
             screenLayout.createParallelGroup(GroupLayout.Alignment.LEADING) // Cria grupo de componentes paralelos
 			.addGroup(screenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            	.addComponent(standbye, 40, 40, 40) // adiciona label de standbye com comprimento 40
+            	.addComponent(standBy, 40, 40, 40) // adiciona label de standBy com comprimento 40
                 .addComponent(content, 40, 40, 40)) // adiciona label de conteúdo com comprimento 40
         );
     }
-        // FIM DE MÉTODOS DE LAYOUT DO VISOR DE CÁLCULOS
-    
-        // INÍCIO DE MÉTODOS DE LAYOUT DO PAINEL GERAL
+
     private Group alignComponents(Group group, List<Component> componentList, int preferredSize){
     	/** 
     	* @param Objeto de qualquer classe-filha de Group. Componente macro que contém linhas/colunas de componentes
@@ -475,8 +448,8 @@ public class Panel extends JPanel {
     }
 
     private void setHorizontalGeneralGroup(GroupLayout layout){
-    	// Determina tamanho horizontal padrão
-    	final int BUTTON_WIDTH = 55;
+    	
+    	final int BUTTON_WIDTH = 55; // Determina tamanho horizontal padrão
 
     	layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -613,13 +586,9 @@ public class Panel extends JPanel {
 				        	)
               		)
               		// FIM DA LINHA 6
-                    //.addGap(0, 19, Short.MAX_VALUE)
+
                 )
         );
     }
-    /**
-     *      FIM DE MÉTODOS DE LAYOUT DO PAINEL GERAL
-     *  FIM DE MÉTODOS PARA CONFIGURAÇÃO DE LAYOUT
-     */
 
 }
