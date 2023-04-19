@@ -69,8 +69,10 @@ public class Mathematics{
 		    }
 	}
 	
-	public double getSubresult(double value, String efemeryOperator) throws Exception{
-		switch (efemeryOperator) {
+	public double getSubresult(double value, String subOperator) throws Exception{
+		
+		
+		switch (subOperator) {
             case "%":
                 // Caso porcentagem tenha sido selecionada
                  return portion[0]*value/100;
@@ -90,7 +92,7 @@ public class Mathematics{
                 return value * (-1);  
             default:
                 // Caso valor inesperado esteja em this.operatorID
-                throw new Exception("Erro ao obter resultado matemático em Mathematics::getSubresult(). Operador utilizado: " + efemeryOperator); // Emite exceção
+                throw new Exception("Erro ao obter resultado matemático em Mathematics::getSubresult(). Operador utilizado: " + subOperator); // Emite exceção
         }
 	}
 }
