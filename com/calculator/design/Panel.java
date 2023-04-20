@@ -32,7 +32,6 @@ import com.calculator.service.Mathematics;
 // Fim de classes internas
 
 /**
- *
  * @author Ariel Santos
  * @author Italo Cerqueira
  * @author Maria França
@@ -53,15 +52,14 @@ public class Panel extends JPanel {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        
         content = new JLabel(" "); // Inicia label de cálculos
         standBy = new JLabel(" "); // Cria standBy de cálculos
 
         // Inicia configuração de botões
-        numbers = styleButtonArray(this.initNumericButtons(new JButton[10])); // Cria botões numéricos
         systemFunc = styleButtonArray(this.initSystemButtons()); // Cria botões com funções de sistema
         basicMath = styleButtonArray(this.initBasicMathSignButtons()); // Cria operadores matemáricos
         specialMath = styleButtonArray(this.initSpecialMathSignButtons()); // Cria demais sinais matemáticos
+        numbers = styleButtonArray(this.initNumericButtons(new JButton[10])); // Cria botões numéricos
 		// Finaliza configuração de botões
 		
         // Inicia configuração do painel de cálculos
@@ -75,12 +73,10 @@ public class Panel extends JPanel {
         
         // Inicia configuração do painel geral
         GroupLayout layout = new GroupLayout(this); // Cria layout geral
-        
         this.setLayout(layout); // Define o layout que o painel deve utilizar
         this.setHorizontalGeneralGroup(layout); // Define layout horizontal do painel
         this.setVerticalGeneralGroup(layout); // Define layout vertical
         // Finaliza configuração do painel geral
-
     }
     
     // INÍCIO DE MÉTODOS PARA CONFIGURAÇÃO DE COMPONENTES
@@ -92,11 +88,8 @@ public class Panel extends JPanel {
          * @since 2.0
          */
 
-        int index = 0; // Índice para percorrer array
-    	
-        // Percorre todo o array
-    	while (index < buttons.length){
-            buttons[index++] = new JButton(); // Instancia posição do array e incrementa índice ao fim
+    	for (int index = 0; index < buttons.length; index++){ // Percorre todo o array
+            buttons[index] = new JButton(); // Instancia posição do array e incrementa índice ao fim
         }
         
         return buttons;
@@ -114,37 +107,30 @@ public class Panel extends JPanel {
         // Inicia configuração do botão "C"
         buttons[0].setText("C");
         buttons[0].addActionListener(evt -> {
-            
                content.setText(" "); // Limpa todo o valor da atual entrada de dados
-               standBy.setText(" ");
-            
+               standBy.setText(" "); 
+               math = null;
         }); 
         // Finaliza configuração do botão "C"
 
         // Inicia configuração do botão "CE"
         buttons[1].setText("CE");
-        buttons[1].addActionListener(evt -> {
-            
-               content.setText(" "); // Limpa todo o valor da atual entrada de dados 
-            
-        }); 
+        buttons[1].addActionListener(evt -> {content.setText(" ");}); // Limpa todo o valor da atual entrada de dados
         // Finaliza configuração do botão "CE"
 
         // Inicia configuração do botão "Del"
         buttons[2].setText("Del");
-        buttons[2].addActionListener(evt -> {
-            
+        buttons[2].addActionListener(evt -> {            
                String nContent = content.getText();   
                nContent = (nContent.charAt(0) == ' ' ? "" : " ") + nContent;
-               
+                 
                int strlen = nContent.length();
   
                if(strlen > 1){ // Evita que espaçamento de 1 caracter seja deletado
 				   content.setText(
 					  (new StringBuilder(nContent)).deleteCharAt(--strlen).toString() // Retorna a string sem o último caractere
 				   );
-			   }
-            
+			   } 
         }); 
         // Finaliza configuração do botão "Del"
 
@@ -167,42 +153,28 @@ public class Panel extends JPanel {
         
         // Inicia configuração do listener geral de botões de operações básicas
         for(int index = 0; index < basicMathSign.length; index++){
-            // Garante que todos os botões serão incluídos
-
             final String op = basicMathSign[index].getText(); // Obtém operador como string final
-
+            
             // Adiciona listener
             basicMathSign[index].addActionListener(evt -> {
-                
                     String nContent = content.getText(); // Obtém cópia do texto de content
                     String nstandBy = standBy.getText(); // Obtém cópia do texto de standBy
 
-                    if(nContent.isBlank()){
-                        // Executa caso não haja valores em content
-
-                        if(math instanceof Mathematics){
-                            // Executa se math já estiver instanciada
+                    if(nContent.isBlank()){ // Executa caso a label de cálculos esteja vazia
+                        if(math instanceof Mathematics){ // Executa se math já estiver instanciada     
                             math.setOperatorID(op); // Altera operador a ser utilizado
                             standBy.setText(nstandBy.substring(0, nstandBy.length()-1) + op); // Altera operador exibido
                         }
-
                         return; // Impede que função continue a ser executada
                     }
-
-                    else if(!nstandBy.isBlank()){
-                        // Executa standBy não estiver vazio, ou seja, esse é o segundo valor da operação
-                        // Operação sequenciais terão o resultado do primeiro cálculo como primeiro valor da operação seguinte
-
+                    else if(!nstandBy.isBlank()){ // Executa standBy não estiver vazio, ou seja, esse é o segundo valor da operação
                         math.setPortion(Double.valueOf(nContent), 1); // Passa valor da segunda posição
 
-                        try {
-                            nContent = (Double.valueOf(math.getResult()).toString()); //  Armazena resultado do cálculo anterior
-                        } catch (Exception e) {
-                            // Executa em caso de exceção emitida
-                            Core.error(e); // Chama método de encerramento de emergência
-                            // Código será encerrado aqui
-                        }
-
+                        try{
+                            nContent = math.getResult().toString(); //  Armazena resultado do cálculo anterior
+                        } catch (Exception e){  // Executa em caso de exceção emitida
+                            Core.error(e); // Chama método de encerramento de emergência   
+                        } 
                     }
                     
                     math = new Mathematics(); // Intancia classe de cálculos
@@ -210,8 +182,7 @@ public class Panel extends JPanel {
                     math.setOperatorID(op); // Define operador
                     
                     standBy.setText(" " +nContent+" "+op); // Informa valor passado e operação escolhida
-                    content.setText(" ");
-                
+                    content.setText(" "); //  Limpa label de cálculos
             });
         }
         // Finaliza configuração do listener geral de botões de operações básicas
@@ -226,119 +197,59 @@ public class Panel extends JPanel {
          * @since 2.0
          */
 
-        // Cria array genérico de JButton com 7 espaços
-    	JButton[] specialMathSign = this.createGenericButtons(new JButton[7]);
+    	JButton[] specialMathSign = this.createGenericButtons(new JButton[7]); // Cria array genérico de JButton com 7 espaços
     	
-        // Inicia configuração do botão de raíz quadrada
-        specialMathSign[0].setText("√");
-        specialMathSign[0].addActionListener(evt -> {
-        	String nContent = content.getText();
-            if(!nContent.isBlank()){
-            	if(!(math instanceof Mathematics)){
-	                math = new Mathematics();
-                }
-                
-                try{
-                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "√")).toString());
-                } catch(Exception e){
-                    Core.error(e);
-                }
-            }
-        });
-        // Finaliza configuração do botão de raíz quadrada
+        specialMathSign[0].setText("√"); // Define texto do botão de raíz quadrada
+        specialMathSign[1].setText("1/x"); // Define texto do botão de inverso
+        specialMathSign[2].setText("x²"); // Define texto do botão de potência quadrada
+        specialMathSign[3].setText("±"); // Define texto do botão de oposto
+        
+        for(int index = 0; index < 4; index++){
+        	String text = specialMathSign[index].getText();
+        	specialMathSign[index].addActionListener(evt -> {
+		    	String nContent = content.getText();
+		    	
+		        if(!nContent.isBlank()){
+		        	if(!(math instanceof Mathematics))
+			            math = new Mathematics();
+
+		            try{
+		                content.setText(math.getSubresult(Double.valueOf(nContent), text).toString());
+		            } catch(Exception e){
+		                Core.error(e);
+		            }
+		        }
+		    });
+        }
 
         // Inicia configuração do botão de porcentagem
-        specialMathSign[1].setText("%");
-        specialMathSign[1].addActionListener(evt -> {
-            
-				
+        specialMathSign[4].setText("%");
+        specialMathSign[4].addActionListener(evt -> {
                 if(math instanceof Mathematics) {
                    String nContent = content.getText();
                     try{
-                        content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "%")).toString());
+                        content.setText(math.getSubresult(Double.valueOf(nContent), "%").toString());
                     } catch(Exception e){
                         Core.error(e);
                     }
                 }
-            
         });
         // Finaliza configuração do botão de porcentagem
-
-        // Inicia configuração do botão de inverso
-        specialMathSign[2].setText("1/x");
-        specialMathSign[2].addActionListener(evt -> {
-            String nContent = content.getText();
-            if(!nContent.isBlank()){
-            	if(!(math instanceof Mathematics)){
-	                math = new Mathematics();
-                }
-                try{
-                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "1/x")).toString());
-                } catch(Exception e){
-                    Core.error(e);
-                }
-            }
-        });
-        // Finaliza configuração do botão de inverso
-
-        // Inicia configuração do botão de potência com expoente 2
-        specialMathSign[3].setText("x²");
-        specialMathSign[3].addActionListener(evt -> {
-            
-              String nContent = content.getText();
-            if(!nContent.isBlank()){
-            	if(!(math instanceof Mathematics)){
-	                math = new Mathematics();
-                }
-                
-                try{
-                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "x²")).toString());
-                } catch(Exception e){
-                    Core.error(e);
-                }
-            }
-        });
-        // Finaliza configuração do botão de potência com expoente 2
-
-        // Inicia configuração do botão de oposto
-        specialMathSign[4].setText("±");
-        specialMathSign[4].addActionListener(evt -> {
-            String nContent = content.getText();
-            if(!nContent.isBlank()){
-            	if(!(math instanceof Mathematics)){
-	                math = new Mathematics();
-                }
-                
-                try{
-                    content.setText(Double.valueOf(math.getSubresult(Double.valueOf(nContent), "±")).toString());
-                } catch(Exception e){
-                    Core.error(e);
-                }
-            }
-            
-        });
-        // Finaliza configuração do botão de oposto
 
         // Inicia configuração do botão de igualdade
         specialMathSign[5].setText("=");
         specialMathSign[5].addActionListener(evt -> {
-            
-                if(!(standBy.getText().isBlank() || content.getText().isBlank())){
-                    // Executa somente quanto standBy e content estão preenchidos
-
+                if(!(standBy.getText().isBlank() || content.getText().isBlank())){ // Executa somente quanto standBy e content estão preenchidos
                 	math.setPortion(Double.valueOf(content.getText()), 1); // Passa segunda parcela do cálculos
-
-                    try {
-                        String nResult = Double.valueOf(math.getResult()).toString();
-                        if(nResult.endsWith(".0")){
+                    try{
+                        String nResult = math.getResult().toString();
+                        if(nResult.endsWith(".0"))
                             nResult = nResult.replace(".0", "");
-                        }
+
                         content.setText(nResult); //  Armazena resultado do cálculo anterior
-                    } catch (Exception e) {
-                        // Executa em caso de exceção emitida
+                    } catch (Exception e) {          
                         Core.error(e); // Chama método de encerramento de emergência
-                        // Código será encerrado aqui
-                    }
+                    } 
 
                 	standBy.setText(" "); // Limpa standBy
                 	math = null;
@@ -352,7 +263,6 @@ public class Panel extends JPanel {
         specialMathSign[6].addActionListener(evt -> {
             	String nContent = content.getText();   
                 if(!nContent.contains(".")) // Executa caso não haja "," na string
-                	
                     content.setText((nContent.charAt(0) == ' ' ? "" : " ") + nContent + "."); // Adiciona "," ao final da string
             
         });
@@ -369,21 +279,16 @@ public class Panel extends JPanel {
          * @since 1.0
          */
         
-        // Percorre todo o array passado por parâmetro
-        for (int index = 0; index < numericButtons.length; index++){
+        for (int index = 0; index < numericButtons.length; index++){ // Percorre todo o array passado por parâmetro
             final String i = Integer.toString(index);
 
-            numericButtons[index] = new JButton(i); // instancia espaço do array
-            
-            // Listener padrão
-            numericButtons[index].addActionListener(evt -> {
-                
+            numericButtons[index] = new JButton(i); // instancia espaço do array       
+            numericButtons[index].addActionListener(evt -> { // Listener padrão          
                     String nContent = content.getText();
                     content.setText( (nContent.charAt(0) == ' ' ? nContent : " ") + i); // Insere número ao fim da string
-                
             });
         }
-
+        
         return numericButtons; // Retorna botões configurados
     }
 
@@ -395,13 +300,13 @@ public class Panel extends JPanel {
          * @since 3.0
          */
         
-        // Percorre todo o array
-        for(int index = 0; index < buttons.length; index++){
+        for(int index = 0; index < buttons.length; index++){ // Percorre todo o array
             buttons[index].setBackground(Color.BLACK); // Define background branco
             buttons[index].setFocusPainted(false); // Desativa foco
             buttons[index].setFont(new Font("Arial", Font.PLAIN, 14)); // Define fonte
             buttons[index].setForeground(Color.WHITE);
         }
+        
         return buttons; // Retorna botões estilizados
     }
 
@@ -441,80 +346,36 @@ public class Panel extends JPanel {
     	* @since 2.0
     	*/
     	
-    	for(Component comp : componentList.toArray(new Component[0])){
-    		group = group.addComponent(comp, preferredSize, preferredSize, preferredSize);
-    	}
+    	for(Component comp : componentList.toArray(new Component[0]))
+    		group = group.addComponent(comp, preferredSize-5, preferredSize, preferredSize+15);
+
     	return group;
     }
 
     private void setHorizontalGeneralGroup(GroupLayout layout){
-    	
     	final int BUTTON_WIDTH = 55; // Determina tamanho horizontal padrão
 
     	layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(screen, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                
-                 // INÍCIO DA COLUNA 1
-                .addGroup(
-                	this.alignComponents(
-                		layout.createSequentialGroup(),  // Grupo de componentes paralelos
-                		Arrays.asList(specialMath[1], specialMath[0], specialMath[3], specialMath[2]), // Componentes a serem enfileirados
-                		BUTTON_WIDTH
-                	)
+                .addComponent(screen, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)                                 
+                .addGroup( // Linha com porcentagem, raíz quadrada, potência quadrada, inverso
+                	this.alignComponents(layout.createSequentialGroup(), Arrays.asList(specialMath[4], specialMath[0], specialMath[2], specialMath[1]), BUTTON_WIDTH)
                 )
-                // FIM DA COLUNA 1
-                
-                // INÍCIO DA COLUNA 2
-                .addGroup(
-                    this.alignComponents(
-                		layout.createSequentialGroup(), // Grupo de componentes paralelos
-                		Arrays.asList(numbers[7], numbers[8], numbers[9], basicMath[1]), // Componentes a serem enfileirados
-                		BUTTON_WIDTH
-                	)
+                .addGroup( // Linha 7, 8, 9 e divisão
+                    this.alignComponents(layout.createSequentialGroup(), Arrays.asList(numbers[7], numbers[8], numbers[9], basicMath[1]), BUTTON_WIDTH)
                 )
-                // FIM DA COLUNA 2
-                
-                // INÍCIO DA COLUNA 3
-                .addGroup(
-                    this.alignComponents(
-                		layout.createSequentialGroup(), // Grupo de componentes paralelos
-                		Arrays.asList(systemFunc[0], systemFunc[1], systemFunc[2], basicMath[0]), // Componentes a serem enfileirados
-                		BUTTON_WIDTH
-                	)
+                .addGroup( // Linha com C, CE, Del e multiplicação
+                    this.alignComponents(layout.createSequentialGroup(), Arrays.asList(systemFunc[0], systemFunc[1], systemFunc[2], basicMath[0]), BUTTON_WIDTH)
+               )               
+               .addGroup( // Linha com 4, 5, 6 e subtração
+                    this.alignComponents(layout.createSequentialGroup(), Arrays.asList(numbers[4], numbers[5], numbers[6], basicMath[2]), BUTTON_WIDTH)
                )
-               // FIM DA COLUNA 3
-               
-               // INÍCIO DA COLUNA 4
-               .addGroup(
-                    this.alignComponents(
-                		layout.createSequentialGroup(), // Grupo de componentes paralelos
-                		Arrays.asList(numbers[4], numbers[5], numbers[6], basicMath[2]), // Componentes a serem enfileirados
-                		BUTTON_WIDTH
-                	)
+              .addGroup(  // LInha com 1, 2, 3 e soma
+                    this.alignComponents(layout.createSequentialGroup(), Arrays.asList(numbers[1], numbers[2], numbers[3], basicMath[3]), BUTTON_WIDTH)
                )
-               // FIM DA COLUNA 4
-               
-               // INÍCIO DA COLUNA 5
-              .addGroup(
-                    this.alignComponents(
-                		layout.createSequentialGroup(), // Grupo de componentes paralelos
-                		Arrays.asList(numbers[1], numbers[2], numbers[3], basicMath[3]), // Componentes a serem enfileirados
-                		BUTTON_WIDTH
-                	)
-               )
-               // FIM DA COLUNA 5
-               
-               // INÍCIO DA COLUNA 6
-              .addGroup(
-                    this.alignComponents(
-                		layout.createSequentialGroup(), // Grupo de componentes paralelos
-                		Arrays.asList(specialMath[4], numbers[0], specialMath[6], specialMath[5]), // Componentes a serem enfileirados
-                		BUTTON_WIDTH
-                	)
-               )
-               // FIM DA COLUNA 6
-     
+              .addGroup( // Linha com oposto, 0, vírgula e igualdade
+                    this.alignComponents(layout.createSequentialGroup(), Arrays.asList(specialMath[3], numbers[0], specialMath[6], specialMath[5]), BUTTON_WIDTH)
+               ) 
         );
     }
     
@@ -525,70 +386,26 @@ public class Panel extends JPanel {
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(screen, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-					
-					// INÍCIO DA LINHA 1
-					.addGroup(
-				            this.alignComponents(
-				        		layout.createParallelGroup(GroupLayout.Alignment.BASELINE),
-				        		Arrays.asList(specialMath[0], specialMath[1], specialMath[2], specialMath[3]),
-				        		BUTTON_HEIGHT
-				        	)
+					.addGroup( // Linha com porcentagem, raíz quadrada, potência quadrada, inverso
+				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(specialMath[0], specialMath[4], specialMath[1], specialMath[2]), BUTTON_HEIGHT)
               		)
-              		// FIM DA LINHA 1
-              		
-              		// INÍCIO DA LINHA 2
-              		.addGroup(
-				            this.alignComponents(
-				        		layout.createParallelGroup(GroupLayout.Alignment.BASELINE),
-				        		Arrays.asList(systemFunc[0], systemFunc[1], basicMath[0], systemFunc[2]),
-				        		BUTTON_HEIGHT
-				        	)
+              		.addGroup( // Coluna com C, CE, divisão, e Del
+				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(systemFunc[0], systemFunc[1], basicMath[0], systemFunc[2]), BUTTON_HEIGHT)
               		)
-              		// FIM DA LINHA 2
-              		
-              		// INÍCIO DA LINHA 3
-              		.addGroup(
-				            this.alignComponents(
-				        		layout.createParallelGroup(GroupLayout.Alignment.BASELINE),
-				        		Arrays.asList(numbers[8], basicMath[1], numbers[9], numbers[7]),
-				        		BUTTON_HEIGHT
-				        	)
+              		.addGroup( // Linha com porcentagem, raíz quadrada, potência quadrada, inverso
+				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(numbers[8], basicMath[1], numbers[9], numbers[7]), BUTTON_HEIGHT)
               		)
-              		// FIM DA LINHA 3
-              		
-              		// INÍCIO DA LINHA 4
-					.addGroup(
-				            this.alignComponents(
-				        		layout.createParallelGroup(GroupLayout.Alignment.BASELINE),
-				        		Arrays.asList(numbers[5], numbers[4], basicMath[2], numbers[6]),
-				        		BUTTON_HEIGHT
-				        	)
+					.addGroup( // Linha com 4, 5, 6 e subtração
+				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(numbers[5], numbers[4], basicMath[2], numbers[6]), BUTTON_HEIGHT)
               		)
-              		// FIM DA LINHA 4
-              		
-              		// INÍCIO DA LINHA 5
-					.addGroup(
-				            this.alignComponents(
-				        		layout.createParallelGroup(GroupLayout.Alignment.BASELINE),
-				        		Arrays.asList(numbers[2], numbers[1], basicMath[3], numbers[3]),
-				        		BUTTON_HEIGHT
-				        	)
+					.addGroup( // LInha com 1, 2, 3 e soma
+				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(numbers[2], numbers[1], basicMath[3], numbers[3]), BUTTON_HEIGHT)
               		)
-              		// FIM DA LINHA 5
-              		
-              		// INÍCIO DA LINHA 6
-              		.addGroup(
-				            this.alignComponents(
-				        		layout.createParallelGroup(GroupLayout.Alignment.BASELINE),
-				        		Arrays.asList(numbers[0], specialMath[4], specialMath[5], specialMath[6]),
-				        		BUTTON_HEIGHT
-				        	)
+              		.addGroup( // Linha com oposto, 0, vírgula e igualdade
+				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(numbers[0], specialMath[3], specialMath[5], specialMath[6]), BUTTON_HEIGHT)
               		)
-              		// FIM DA LINHA 6
-
-                )
+            )
         );
-    }
+	}	
 
 }
