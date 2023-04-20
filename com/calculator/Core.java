@@ -19,13 +19,15 @@ import com.calculator.design.Panel;
 public class Core {
 
     private static JFrame frame; // Frame da calculadora
-
+	
     public static void main(String[] args) {
-    
+    	
         frame = new JFrame("Calculadora"); // Instancia e define título do frame
         frame.add(new Panel()); // Adiciona painel da calculadore
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Determina que código deve ser encerrado no fechamento do frame
-        frame.setSize(240,360); // Define dimensões
+        
+        frame.setSize(245,390); // Define dimensões
+        
         frame.setLocationRelativeTo(null); // Centraliza frame na tela
         frame.setVisible(true); // Torna frame visível
         

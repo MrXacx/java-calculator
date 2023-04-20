@@ -1,6 +1,5 @@
 package com.calculator.service;
 
-
 /**
  * @author Ariel Santos
  * @author Maria França

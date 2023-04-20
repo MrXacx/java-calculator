@@ -46,6 +46,8 @@ public class Panel extends JPanel {
     private JPanel screen; // Painel de exibição
 	private Mathematics math; // Manipulador da classe de cálculos
 	
+	private Double memory = Double.valueOf(0); // sistema de memória
+	
     public Panel() {
         initComponents();
     }
@@ -102,23 +104,23 @@ public class Panel extends JPanel {
          * @since 2.0
          */
 
-        JButton[] buttons = this.createGenericButtons(new JButton[3]); // Cria array genérico de JButton com 3 espaços
+        JButton[] buttons = this.createGenericButtons(new JButton[7]); // Cria array genérico de JButton com 3 espaços
     	 
-        // Inicia configuração do botão "C"
+        // Inicia configuração do botão "Clear"
         buttons[0].setText("C");
         buttons[0].addActionListener(evt -> {
                content.setText(" "); // Limpa todo o valor da atual entrada de dados
                standBy.setText(" "); 
                math = null;
         }); 
-        // Finaliza configuração do botão "C"
+        // Finaliza configuração do botão "Clear"
 
-        // Inicia configuração do botão "CE"
+        // Inicia configuração do botão "Clear Entry"
         buttons[1].setText("CE");
         buttons[1].addActionListener(evt -> {content.setText(" ");}); // Limpa todo o valor da atual entrada de dados
-        // Finaliza configuração do botão "CE"
+        // Finaliza configuração do botão "Clear Entry"
 
-        // Inicia configuração do botão "Del"
+        // Inicia configuração do botão "Delete"
         buttons[2].setText("Del");
         buttons[2].addActionListener(evt -> {            
                String nContent = content.getText();   
@@ -132,8 +134,48 @@ public class Panel extends JPanel {
 				   );
 			   } 
         }); 
-        // Finaliza configuração do botão "Del"
-
+        // Finaliza configuração do botão "Delete"
+        
+         // Inicia configuração do botão "Memory Clear"
+        buttons[3].setText("MC");
+        buttons[3].addActionListener(evt -> {            
+           memory = 0.0; 
+        });
+        // Finaliza configuração do botão "Memory Clear"
+        
+         // Inicia configuração do botão "Memory Recall"
+        buttons[4].setText("MR");
+        buttons[4].addActionListener(evt -> {            
+           content.setText(memory.toString());
+           
+        });
+        // Finaliza configuração do botão "Memory Recall"
+        
+         
+        buttons[5].setText("M+"); // Define texto do botão "Memory Add"
+        buttons[6].setText("M-"); // Define texto do botão "Memory Subtract"
+       
+       for(int index = 5; index < 7; index++){
+       		String op = buttons[index].getText().replace("M", "");
+       		buttons[index].addActionListener(evt -> {
+		    	String nContent = content.getText();
+		    	if(!nContent.isBlank()){
+					var localMath = new Mathematics();
+					localMath.setPortion(memory, 0);
+					localMath.setPortion(Double.valueOf(nContent), 1);
+					localMath.setOperatorID(op);
+					
+					try{
+                        memory = localMath.getResult(); //  Armazena resultado do cálculo anterior
+                    } catch (Exception e){  // Executa em caso de exceção emitida
+                        Core.error(e); // Chama método de encerramento de emergência   
+                    }
+                    content.setText(" ");
+				}
+		    });
+       }
+        // Finaliza configuração do botão "Delete"
+		
         return buttons;
     }
     
@@ -357,14 +399,17 @@ public class Panel extends JPanel {
 
     	layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(screen, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)                                 
+                .addComponent(screen, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup( // Linha com Memory Cleat, Memory Recall, Memory Add, Memory Subtract
+                	this.alignComponents(layout.createSequentialGroup(), Arrays.asList(systemFunc[3], systemFunc[4], systemFunc[5], systemFunc[6]), BUTTON_WIDTH)
+                )                          
                 .addGroup( // Linha com porcentagem, raíz quadrada, potência quadrada, inverso
                 	this.alignComponents(layout.createSequentialGroup(), Arrays.asList(specialMath[4], specialMath[0], specialMath[2], specialMath[1]), BUTTON_WIDTH)
                 )
                 .addGroup( // Linha 7, 8, 9 e divisão
                     this.alignComponents(layout.createSequentialGroup(), Arrays.asList(numbers[7], numbers[8], numbers[9], basicMath[1]), BUTTON_WIDTH)
                 )
-                .addGroup( // Linha com C, CE, Del e multiplicação
+                .addGroup( // Linha com Clear, Clear Entry, Delete e multiplicação
                     this.alignComponents(layout.createSequentialGroup(), Arrays.asList(systemFunc[0], systemFunc[1], systemFunc[2], basicMath[0]), BUTTON_WIDTH)
                )               
                .addGroup( // Linha com 4, 5, 6 e subtração
@@ -386,10 +431,13 @@ public class Panel extends JPanel {
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(screen, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGroup( // Linha com Memory Cleat, Memory Recall, Memory Add, Memory Subtract
+		            	this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(systemFunc[3], systemFunc[4], systemFunc[5], systemFunc[6]), BUTTON_HEIGHT)
+		            )       
 					.addGroup( // Linha com porcentagem, raíz quadrada, potência quadrada, inverso
 				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(specialMath[0], specialMath[4], specialMath[1], specialMath[2]), BUTTON_HEIGHT)
               		)
-              		.addGroup( // Coluna com C, CE, divisão, e Del
+              		.addGroup( // Linha com Clear, Clear Entry, divisão, e Delete
 				            this.alignComponents(layout.createParallelGroup(GroupLayout.Alignment.BASELINE), Arrays.asList(systemFunc[0], systemFunc[1], basicMath[0], systemFunc[2]), BUTTON_HEIGHT)
               		)
               		.addGroup( // Linha com porcentagem, raíz quadrada, potência quadrada, inverso
