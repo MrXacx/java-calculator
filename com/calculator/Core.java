@@ -10,11 +10,8 @@ import com.calculator.design.Panel;
 // Início de classes internas
 
 /**
- *
  * @author Ariel Santos
- * @version 2.0
- * @since 1.0
- * 
+ * @author Italo Cerqueira
  */
 public class Core {
 

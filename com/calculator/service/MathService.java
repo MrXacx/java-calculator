@@ -4,16 +4,14 @@ package com.calculator.service;
  * @author Ariel Santos
  * @author Maria França
  * @author Pedro Santos
- * @version 2.0
- * @since 3.0
  */
 
-public class Mathematics{
+public class MathService{
 
 	private Double[] portion; // Números do cálculo
 	private String operatorID; // Operador a ser utilizado
 	
-	public Mathematics(){
+	public MathService(){
 		this.portion = new Double[2]; // Instancia array de duas posições
 	}
 	
@@ -21,8 +19,6 @@ public class Mathematics{
 		/**
 		 * @param número a ser calculado
 		 * @param posição do número do cálculo
-		 * @since 1.0
-		 * @version 1.0
 		 */
 		this.portion[id] = number;
 	}
@@ -30,8 +26,6 @@ public class Mathematics{
 	public void setOperatorID(String operatorID){
         /**
          * @param operador do cálculo
-         * @since 1.0
-         * @version 1.0
          */
         this.operatorID = operatorID;
 	}
@@ -39,8 +33,6 @@ public class Mathematics{
 	public Double getResult() throws Exception{
 	    /**
 	     * @return Resultado da operação definida
-	     * @since 1.0
-	     * @version 1.0 
 	     * @throws Exception
 	     */
 		
@@ -59,7 +51,7 @@ public class Mathematics{
 	            result = portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
 				break;
 	        default: // Caso valor inesperado esteja em this.operatorID
-	            throw new Exception("Erro ao obter resultado matemático em Mathematics::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
+	            throw new Exception("Erro ao obter resultado matemático em MathService::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
 	    }
 	    
 	    return Double.valueOf(result);
@@ -70,8 +62,7 @@ public class Mathematics{
 		* @param fracionário a ser calculado
 		* @param operador da subexpressão
 		* @return resultado da subexpressão
-		* @since 2.0
-		* @version 3.0
+		* @throws Exception
 		*/		
 	
 		double subresult;
@@ -94,7 +85,7 @@ public class Mathematics{
                 break; 
             default: // Caso valor inesperado esteja em this.operatorID
                 
-                throw new Exception("Erro ao obter resultado matemático em Mathematics::getSubresult(). Operador utilizado: " + subOperator); // Emite exceção
+                throw new Exception("Erro ao obter resultado matemático em MathService::getSubresult(). Operador utilizado: " + subOperator); // Emite exceção
         }
         
         return Double.valueOf(subresult);
