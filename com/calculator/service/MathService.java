@@ -30,64 +30,52 @@ public class MathService{
         this.operatorID = operatorID;
 	}
 	
-	public Double getResult() throws Exception{
+	public double getResult() throws Exception{
 	    /**
 	     * @return Resultado da operação definida
 	     * @throws Exception
 	     */
 		
-		double result;
 	    switch (this.operatorID) {
 	        case "+": // Caso soma tenha sido selecionada
-	            result = portion[0] + portion[1];
-	            break;
+				return portion[0] + portion[1];
 	        case "-": // Caso subtração tenha sido selecionada
-	            result = portion[0] - portion[1];
-				break;
+				return portion[0] - portion[1];
 	        case "x": // Caso multiplicação tenha sido selecionada
-	            result = portion[0] * portion[1];
-				break;
+				return portion[0] * portion[1];
 	        case "÷": // Caso divisão tenha sido selecionada		           
-	            result = portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
-				break;
+	            return portion[1].equals(0) ? Double.NaN : portion[0] / portion[1];
 	        default: // Caso valor inesperado esteja em this.operatorID
 	            throw new Exception("Erro ao obter resultado matemático em MathService::getResult(). Operador utilizado: " + this.operatorID); // Emite exceção
 	    }
-	    
-	    return Double.valueOf(result);
 	}
 	
-	public Double getSubresult(double value, String subOperator) throws Exception{
+	public double getSubresult(double value, String subOperator) throws Exception{
 		/**
 		* @param fracionário a ser calculado
 		* @param operador da subexpressão
 		* @return resultado da subexpressão
 		* @throws Exception
 		*/		
-	
-		double subresult;
 		
 		switch (subOperator) {
             case "%": // Caso porcentagem tenha sido selecionada         
-                 subresult = portion[0] * value/100;
-                 break;    
+				return portion[0] * value/100;    
             case "√": // Caso radiciação tenha sido selecionada
-                subresult = Math.sqrt(value);
- 				break;
+				return Math.sqrt(value);
             case "x²": // Caso potenciação tenha sido selecionada      
-                subresult = (value * value);
-                break;
+				return (value * value);
             case "1/x": // Caso o inverso do número tenha sido selecionado
-                subresult =  1/value;
-                break;      
+				return  1/value;     
             case "±": // Caso a alteração de sinal tenha sido selecionada             
-                subresult = value * (-1); 
-                break; 
-            default: // Caso valor inesperado esteja em this.operatorID
-                
+				return value * (-1); 
+            default: // Caso valor inesperado esteja em this.operatorID  
                 throw new Exception("Erro ao obter resultado matemático em MathService::getSubresult(). Operador utilizado: " + subOperator); // Emite exceção
         }
-        
-        return Double.valueOf(subresult);
+	}
+
+	public static String doubleOrInt(double value){
+		String nValue = Double.valueOf(value).toString();
+		return (value == (int) value ? nValue.replace(".0", "") : nValue);
 	}
 }
