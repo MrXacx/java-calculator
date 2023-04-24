@@ -76,6 +76,11 @@ public class MathService{
 
 	public static String doubleOrInt(double value){
 		String nValue = Double.valueOf(value).toString();
-		return (value == (int) value ? nValue.replace(".0", "") : nValue);
+		if(value == (int) value){
+			nValue =  nValue.replace(".0", "");
+			if(value == 0)
+				nValue = nValue.replace("-","");
+		}
+		return nValue;
 	}
 }

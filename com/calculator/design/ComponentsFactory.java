@@ -42,7 +42,7 @@ public class ComponentsFactory{
     	this.numbers = this.styleButtonArray(this.createNumericButtons(new JButton[10])); // Cria botões numéricos;
     }
     
-    private static JButton[] styleButtonArray(JButton[] buttons){
+    private JButton[] styleButtonArray(JButton[] buttons){
         /**
          * @param array de botões a serem estilizados
          * @return array de botões após estilização
@@ -57,7 +57,7 @@ public class ComponentsFactory{
         return buttons; // Retorna botões estilizados
     }
     
-	private static JButton[] createGenericButtons(JButton[] buttons){
+	private JButton[] createGenericButtons(JButton[] buttons){
         /**
          * @param Array de JButton com espaços nulos
          * @return Array de JButton totalmente preenchido com instâncias de JButton
@@ -75,7 +75,7 @@ public class ComponentsFactory{
          * @return Array de botões com funções não-numéricas configuradas
          */
 
-        JButton[] buttons = createGenericButtons(new JButton[7]); // Cria array genérico de JButton com 3 espaços
+        JButton[] buttons = this.createGenericButtons(new JButton[7]); // Cria array genérico de JButton com 3 espaços
     	 
         // Configuração do botão "Clear"
         buttons[0].setText("C");
@@ -152,7 +152,7 @@ public class ComponentsFactory{
          * @return Array de botões com operações matemáticas básicas configuradas
          */
 
-        JButton[] basicMathSign = createGenericButtons(new JButton[4]); // Cria array genérico de JButton com 4 espaços
+        JButton[] basicMathSign = this.createGenericButtons(new JButton[4]); // Cria array genérico de JButton com 4 espaços
         
         basicMathSign[0].setText("÷"); // Define texeto do botão de divisão
         basicMathSign[1].setText("x"); // Define texeto do botão de multiplicação
@@ -171,17 +171,17 @@ public class ComponentsFactory{
                         if(math instanceof MathService){ // Executa se math já estiver instanciada     
                             math.setOperatorID(op); // Altera operador a ser utilizado
                             standBy.setText(nstandBy.substring(0, nstandBy.length()-1) + op); // Altera operador exibido
-                        }
+                  	}
                         return; // Impede que função continue a ser executada
-                    }
+					}
                     else if(!nstandBy.isBlank()){ // Executa standBy não estiver vazio, ou seja, esse é o segundo valor da operação
                         math.setPortion(Double.valueOf(nContent), 1); // Passa valor da segunda posição
 
                         try{
                             nContent = MathService.doubleOrInt(math.getResult()); //  Armazena resultado do cálculo anterior
-                        } catch (Exception e){  // Executa em caso de exceção emitida
+                   } catch (Exception e){  // Executa em caso de exceção emitida
                             Core.error(e); // Chama método de encerramento de emergência   
-                        } 
+                  } 
                     }
                     
                     math = new MathService(); // Intancia classe de cálculos
@@ -193,7 +193,7 @@ public class ComponentsFactory{
             });
         }
 
-        return styleButtonArray(basicMathSign);
+        return basicMathSign;
     }
 
     private JButton[] createSpecialMathSignButtons(){
@@ -201,7 +201,7 @@ public class ComponentsFactory{
          * @return Array de botões com operações matemáticas complementares configuradas
          */
 
-    	JButton[] specialMathSign = createGenericButtons(new JButton[7]); // Cria array genérico de JButton com 7 espaços
+    	JButton[] specialMathSign = this.createGenericButtons(new JButton[7]); // Cria array genérico de JButton com 7 espaços
     	
         specialMathSign[0].setText("√"); // Define texto do botão de raíz quadrada
         specialMathSign[1].setText("1/x"); // Define texto do botão de inverso
@@ -246,13 +246,9 @@ public class ComponentsFactory{
         specialMathSign[5].setText("=");
         specialMathSign[5].addActionListener(evt -> {
                 if(!(standBy.getText().isBlank() || content.getText().isBlank())){ // Executa somente quanto standBy e content estão preenchidos
-                	math.setPortion(Double.valueOf(content.getText()), 1); // Passa segunda parcela do cálculos
+                math.setPortion(Double.valueOf(content.getText()), 1); // Passa segunda parcela do cálculos
                     try{
-                        String nResult = MathService.doubleOrInt(math.getResult());
-                        if(nResult.endsWith(".0")) // Executa se os últimos caracteres forem ".0"
-                            nResult = nResult.replace(".0", "");
-
-                        content.setText(nResult); //  Armazena resultado do cálculo anterior
+                        content.setText(MathService.doubleOrInt(math.getResult())); //  Armazena resultado do cálculo anterior
                     } catch (Exception e) {          
                         Core.error(e); // Chama método de encerramento de emergência
                     } 
@@ -264,12 +260,13 @@ public class ComponentsFactory{
         });
 
         // Configuração do botão de vírgula
-        specialMathSign[6].setText(".");
-        specialMathSign[6].addActionListener(evt -> {
-            	String nContent = content.getText();   
-                if(!nContent.contains(".")) // Executa caso não haja "," na string
-                    content.setText((nContent.charAt(0) == ' ' ? "" : " ") + nContent + "."); // Adiciona "." ao final da string
-            
+       specialMathSign[6].setText(".");
+       specialMathSign[6].addActionListener(evt -> {
+       		String nContent = content.getText(); 
+				if(nContent.equals(" "))
+					content.setText(" 0.");
+                else if(!nContent.contains(".")) // Executa caso não haja "," na string
+                    content.setText( (nContent.contains(" ") ? "" : " ") + nContent + "."); // Adiciona "." ao final da string
         });
 
         return specialMathSign;
@@ -287,7 +284,7 @@ public class ComponentsFactory{
             numericButtons[index] = new JButton(i); // instancia espaço do array       
             numericButtons[index].addActionListener(evt -> { // Listener padrão          
                     String nContent = content.getText();
-                    content.setText( (nContent.charAt(0) == ' ' ? nContent : " ") + i); // Insere número ao fim da string
+                    content.setText( (nContent.startsWith(" ") ? nContent : " ") + i); // Insere número ao fim da string
             });
         }
         
