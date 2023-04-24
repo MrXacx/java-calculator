@@ -49,7 +49,7 @@ public class ComponentsFactory{
          */
         
         for(int index = 0; index < buttons.length; index++){ // Percorre todo o array
-            buttons[index].setBackground(Color.BLACK); // Define background branco
+            buttons[index].setBackground(Color.BLACK); // Define background preto
             buttons[index].setFocusPainted(false); // Desativa foco
             buttons[index].setFont(new Font("Arial", Font.PLAIN, 14)); // Define fonte
             buttons[index].setForeground(Color.WHITE);
@@ -178,7 +178,7 @@ public class ComponentsFactory{
                         math.setPortion(Double.valueOf(nContent), 1); // Passa valor da segunda posição
 
                         try{
-                            nContent = math.getResult().toString(); //  Armazena resultado do cálculo anterior
+                            nContent = MathService.doubleOrInt(math.getResult()); //  Armazena resultado do cálculo anterior
                         } catch (Exception e){  // Executa em caso de exceção emitida
                             Core.error(e); // Chama método de encerramento de emergência   
                         } 
@@ -218,7 +218,9 @@ public class ComponentsFactory{
 			            math = new MathService();
 
 		            try{
-		                content.setText(math.getSubresult(Double.valueOf(nContent), text).toString());
+		                content.setText(
+                            MathService.doubleOrInt(math.getSubresult(Double.valueOf(nContent), text))
+                        );
 		            } catch(Exception e){
 		                Core.error(e);
 		            }
@@ -232,7 +234,8 @@ public class ComponentsFactory{
                 if(math instanceof MathService) {
                    String nContent = content.getText();
                     try{
-                        content.setText(math.getSubresult(Double.valueOf(nContent), "%").toString());
+                        content.setText(
+                            MathService.doubleOrInt(math.getSubresult(Double.valueOf(nContent), "%")));
                     } catch(Exception e){
                         Core.error(e);
                     }
@@ -245,7 +248,7 @@ public class ComponentsFactory{
                 if(!(standBy.getText().isBlank() || content.getText().isBlank())){ // Executa somente quanto standBy e content estão preenchidos
                 	math.setPortion(Double.valueOf(content.getText()), 1); // Passa segunda parcela do cálculos
                     try{
-                        String nResult = math.getResult().toString();
+                        String nResult = MathService.doubleOrInt(math.getResult());
                         if(nResult.endsWith(".0")) // Executa se os últimos caracteres forem ".0"
                             nResult = nResult.replace(".0", "");
 
@@ -269,7 +272,7 @@ public class ComponentsFactory{
             
         });
 
-        return styleButtonArray(specialMathSign);
+        return specialMathSign;
     }
     
     private JButton[] createNumericButtons(JButton[] numericButtons){
@@ -288,6 +291,6 @@ public class ComponentsFactory{
             });
         }
         
-        return styleButtonArray(numericButtons);
+        return numericButtons;
     }
 }
